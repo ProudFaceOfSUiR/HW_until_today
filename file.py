@@ -39,7 +39,16 @@ print(stat_forum2)
 page = requests.get(forum2)
 print(page.status_code)
 
+print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
 
+
+
+
+print(page.text)
+
+
+
+print("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
 soup = BeautifulSoup(page.text, "html.parser")
 
 all_links = [a['href'] for a in soup.findAll('a', class_='topic_title')]
