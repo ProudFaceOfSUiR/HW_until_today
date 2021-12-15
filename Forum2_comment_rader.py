@@ -33,9 +33,9 @@ for i in page:
 
 
 csv = pd.DataFrame()
-csv['comments'] = comments
 csv["author_rank"] = author_rank
 csv["author_messges"] = author_messages
 csv["author_reputation"] = author_reputation
 csv["comment_text"] = comments
+csv["date"] = date
 csv.to_csv("everyComment2.csv")

@@ -59,8 +59,12 @@ all_links = [a['href'] for a in soup.findAll('a', class_='topic_title')]
 #print(all_links)
 
 comments = []
+date = []
+author_rank = []
+author_messages = []
+author_reputation = []
 #print(requests.get(all_links[1]).text)
-
+rank = []
 for j, link in enumerate(all_links):
     page = requests.get(link)
     soup = BeautifulSoup(page.text, "html.parser")
@@ -70,14 +74,38 @@ for j, link in enumerate(all_links):
     else:
         p = int(p[0].find('a').text.split()[3])
         #print(p)
-    comments.append([])
     for i in range(1, p + 1):
         page = requests.get(link+f'&page={i}')
         soup = BeautifulSoup(page.text, "html.parser")
         com = soup.findAll('div', class_='post')
+        dat = soup.findAll('abbr', class_='published')
+        a = 0
+        rank = soup.findAll("p", {"class": "desc member_title"})
+        rep = soup.findAll("li", {"class": "group_title"})
+        name = soup.findAll("span", {"itemprop":"name"})
         for c in com:
-            comments[j].append(c.text)
-    print(f'end {j}')
+            try:
+                comments.append(str(c.text))
+                print(comments[a])
+                date.append(dat[a].text.split("-")[0][:-1])
+                print(date[a])
+                author_reputation.append(rep[a].text)
+                author_messages.append(name[a].text)
+                author_rank.append(rank[a].text)
+                a+=1
+            except IndexError:
+                author_rank.append("nan")
+                a+=1
+    #print(f'end {j}')
 
-print(comments[0])
+csv = pd.DataFrame()
+print(len(comments))
+print(comments.__class__)
+
+csv["author_rank"] = author_rank
+csv["author_messges"] = author_messages
+csv["author_reputation"] = author_reputation
+csv["comment_text"] = comments
+csv["date"] = date
+csv.to_csv("forum2.csv")
 
